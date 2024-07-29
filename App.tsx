@@ -1,12 +1,22 @@
+import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import QuizScreen from './src/app/QuizScreen';
+import QuizContextProvider from './src/providers/QuizProvider';
+import questions from './src/questions';
 
 export default function App() {
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const question = questions[questionIndex];
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <>
+      <QuizContextProvider>
+        <QuizScreen />
+      </QuizContextProvider>
+
       <StatusBar style="auto" />
-    </View>
+    </>
   );
 }
 
