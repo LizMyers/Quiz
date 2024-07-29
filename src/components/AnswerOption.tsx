@@ -13,7 +13,6 @@ export default function AnswerOption({ option, correctAnswer, showAnswer }: Answ
   const isSelected = option === selectedOption;
  
   useEffect(() => {
-    console.log('showAnswer from answer option', showAnswer);
   }, [showAnswer]);
 
   return (

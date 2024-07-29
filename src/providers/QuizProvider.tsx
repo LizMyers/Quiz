@@ -7,6 +7,7 @@ import {
 } from 'react';
 import questions from '../questions60';
 import { Question } from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type QuizContext = {
     question?: Question;
@@ -64,9 +65,14 @@ export default function QuizProvider({ children }: PropsWithChildren<{}>) {
         }
     };
 
+        useEffect(() => {
+        loadBestScore();
+    } , []);
+
     useEffect(() => {
         if (isFinished === true && score > bestscore) {
             setBestScore(score);
+            saveBestScore(score);
         }
     }, [isFinished]);
 
@@ -86,23 +92,19 @@ export default function QuizProvider({ children }: PropsWithChildren<{}>) {
         setUsedQuestions((prevUsed) => [...prevUsed, ...newQuestions]);
 
         return () => {
-            console.log('cleanup new questions');
+            setSelectedQuestions([]);
+            setUsedQuestions([]);
         }
     }, []);
 
     useEffect(() => {
-        console.log('showAnswer from Qprovider:', showAnswer);
+       
     }, [showAnswer]);
 
     useEffect(() => {
         if (questionIndex >= selectedQuestions.length) {
             calculateScore();
         }
-
-        return () => {
-            console.log('cleanup up scoring');
-        }
-
     }, [questionIndex, selectedQuestions.length, score, setBestScore]);
 
     const onNext = () => {
@@ -132,6 +134,25 @@ export default function QuizProvider({ children }: PropsWithChildren<{}>) {
             setSelectedOption(undefined); // Clear the selected option
         }
     };
+
+    const saveBestScore = async (value: Number) => {
+        try {
+            await AsyncStorage.setItem('best-score', bestscore.toString());
+        } catch (e) {
+            console.log('Error saving best score:', e);
+        }
+    }
+
+    const loadBestScore = async () => {
+        try {
+          const value = await AsyncStorage.getItem('best-score');
+          if (value !== null) {
+            setBestScore(Number.parseInt(value));
+          }
+        } catch (e) {
+          console.log('Failed to load best score');
+        }
+      };
 
     return (
         <QuizContext.Provider 

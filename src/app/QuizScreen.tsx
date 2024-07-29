@@ -5,6 +5,8 @@ import Card from '../components/Card';
 import CustomButton from '../components/CustomButton';
 import FontAwesome6 from '@expo/vector-icons/build/FontAwesome6';
 import { useQuizContext } from '../providers/QuizProvider';
+import FireWorks from '../components/FireWorks';
+import LottieView from 'lottie-react-native';
 
 export default function QuizScreen() {
   const {
@@ -25,7 +27,27 @@ export default function QuizScreen() {
 
   return (
     <SafeAreaView style={styles.page}>
+   
+  
+
       <View style={styles.container}>
+
+        { isFinished && passedQuiz &&
+          <LottieView
+            source={require('../../assets/fireworks.json')}
+            autoPlay
+            loop={true}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '40%',
+              borderColor: 'black',
+              borderWidth: 0,
+              zIndex: 1,
+            }}
+          />
+        }
+    
         {/* Header */}
         <View>
           {questionIndex <= totalQuestions - 1 && (
@@ -97,6 +119,7 @@ export default function QuizScreen() {
           />
         </View>
       </View>
+      
     </SafeAreaView>
   );
 }
